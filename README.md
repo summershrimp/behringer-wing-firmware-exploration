@@ -82,14 +82,6 @@ DualLite and Solo variants. Physical chip marking confirms Solo.
 #### WING_DATA Partition Contents
 - User snapshots/presets (e.g., `JUGO BAND.snap`)
 
-#### Raw Area (sectors 0–2047)
-- Sector 0: MBR with x86 boot stub and partition table
-- Sectors 2–2047: **All zeros** — no i.MX6 IVT/DCD bootloader found here
-
-#### eMMC Hardware Boot Partitions
-- Boot partition 0 (hwpart 1): **All zeros**
-- Boot partition 1 (hwpart 2): **All zeros**
-
 ## Boot Configuration
 
 ### eFuse Readout
@@ -258,23 +250,6 @@ Run it with:
 bun run wingfw:decode -- --input /path/to/firmware.wingfw --output-dir ./decode-out
 ```
 
-## Next Steps
-
-1. **Physically probe the SPI NOR flash** — identify the chip on the PCB
-   and trace its MOSI/MISO/SCLK/CS connections to determine the actual
-   IOMUX pad mapping used by the Wing
-2. **Logic analyzer on ECSPI1 during normal boot** — capture SPI traffic
-   to the flash while the i.MX6 ROM reads the bootloader
-3. **Dump the SPI flash directly** — once the correct pad mapping is known,
-   either read via U-Boot `sf probe` with correct IOMUX config, or use an
-   external SPI programmer
-4. **Investigate Bank 2 read-locked fuses** — the access-protected OTP
-   area may contain encryption keys for the `.wingfw` file
-5. **Finish the `.wingfw` decoder rewrite** — the outer header, rolling helper,
-   manifest format, split `APPKEY`, and LZ4 unpacker are now settled; the
-   remaining gap is wiring the exact three runtime `%s` values used by the
-   inner MD5 derivation
-6. **Check for JTAG** — i.MX6 JTAG may be accessible for memory dumps
-   during normal boot to capture the decrypted firmware in RAM
-7. **Try booting the original firmware** and dumping RAM via our custom
-   U-Boot's `md` command at known kernel load addresses
+## Contributors
+- Niklas Arnitz
+-
